@@ -13,9 +13,17 @@ import {
   IonSelectOption,
   IonButton,
 } from "@ionic/react";
-import React from "react";
+import React, { useState } from "react";
 
 const AddIncident: React.FC = () => {
+  const [inputValue, setInputValue] = useState<string>("");
+  const [selectOption, setSelectOption] = useState<string>("");
+  const [location, setLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const [currentDateTime, setCurrentDateTime] = useState<string | null>(null);
+
   return (
     <IonPage>
       <IonHeader>
@@ -30,13 +38,14 @@ const AddIncident: React.FC = () => {
             label="Incident"
             labelPlacement="floating"
             placeholder="Enter text"
+            value={inputValue}
           ></IonInput>
         </IonItem>
 
         <IonItem>
           <IonLabel>Select Category</IonLabel>
           <IonSelect
-            value=""
+            value={selectOption}
             placeholder="Categories"
             // onIonChange={(e) => setSelectedOption(e.detail.value)}
           >
