@@ -38,10 +38,10 @@ const CardsControl: React.FC<{
       <IonGrid>
         <IonRow>
           <IonCol className="ion-text-left">
-            <IonChip color="medium">Date</IonChip>
+            <IonChip color="medium">Category</IonChip>
           </IonCol>
           <IonCol className="ion-text-right">
-            <IonChip color="medium">Time</IonChip>
+            <IonChip color="medium">Date-Time</IonChip>
           </IonCol>
         </IonRow>
 

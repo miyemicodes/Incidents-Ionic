@@ -12,17 +12,44 @@ import {
   IonSelect,
   IonSelectOption,
   IonButton,
+  IonRow,
+  IonSpinner,
 } from "@ionic/react";
 import React, { useState } from "react";
 
 const AddIncident: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [selectOption, setSelectOption] = useState<string>("");
+  const [textArea, setTextArea] = useState<string>("");
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
   const [currentDateTime, setCurrentDateTime] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = () => {};
+
+  const getDateTime = () => {
+    const now = new Date();
+    setCurrentDateTime(now.toLocaleString());
+  };
+  const getLocation = () => {
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        setLoading(false);
+      },
+      (error) => {
+        console.error(error);
+        setLoading(false);
+      }
+    );
+  };
 
   return (
     <IonPage>
@@ -39,6 +66,7 @@ const AddIncident: React.FC = () => {
             labelPlacement="floating"
             placeholder="Enter text"
             value={inputValue}
+            onIonChange={(e) => setInputValue(e.detail.value!)}
           ></IonInput>
         </IonItem>
 
@@ -47,7 +75,7 @@ const AddIncident: React.FC = () => {
           <IonSelect
             value={selectOption}
             placeholder="Categories"
-            // onIonChange={(e) => setSelectedOption(e.detail.value)}
+            onIonChange={(e) => setSelectOption(e.detail.value)}
           >
             <IonSelectOption value="Fighting">Fighting</IonSelectOption>
             <IonSelectOption value="Accident">Accident</IonSelectOption>
@@ -60,6 +88,8 @@ const AddIncident: React.FC = () => {
             label="Description"
             labelPlacement="floating"
             placeholder="Enter description"
+            value={textArea}
+            onIonChange={(e) => setTextArea(e.detail.value!)}
           >
             <div slot="label">
               Comments <IonText color="danger">(Required)</IonText>
@@ -68,10 +98,45 @@ const AddIncident: React.FC = () => {
         </IonItem>
 
         <IonItem>
-          <IonInput label="Add Image" labelPlacement="floating"></IonInput>
+          <IonRow>
+            <IonLabel className="ion-padding">Upload Image</IonLabel>
+            <input
+              type="file"
+              accept="image/*,video/*"
+              multiple
+              className="ion-text-left"
+            />
+          </IonRow>
         </IonItem>
 
-        <IonButton expand="block">Submit</IonButton>
+        <IonItem>
+          {currentDateTime ? (
+            <IonText>{currentDateTime}</IonText>
+          ) : (
+            <IonButton expand="block" onClick={getDateTime}>
+              Get Current Date and Time
+            </IonButton>
+          )}
+        </IonItem>
+
+        <IonItem>
+          {loading ? (
+            <IonSpinner name="crescent" />
+          ) : location ? (
+            <>
+              <p>Latitude: {location.latitude}</p>
+              <p>Longitude: {location.longitude}</p>
+            </>
+          ) : (
+            <IonButton expand="block" onClick={getLocation}>
+              Get Current Location
+            </IonButton>
+          )}
+        </IonItem>
+
+        <IonButton expand="block" onClick={handleSubmit}>
+          Submit
+        </IonButton>
       </IonContent>
     </IonPage>
   );
