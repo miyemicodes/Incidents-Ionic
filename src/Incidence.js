@@ -6,8 +6,7 @@ const Incidences = [
     description:
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corporis perferendis ut vel nihil fugiat, non placeat ducimus adipisci?",
     categories: "fighting",
-    date: "2024-06-11",
-    time: "14:30",
+    dateTime: "2024-06-11 14:30",
     location: "Data Center 1",
   },
   {
@@ -33,3 +32,6 @@ const Incidences = [
     location: "Remote Office",
   },
 ];
+
+
+export default Incidences;

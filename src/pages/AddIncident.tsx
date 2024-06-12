@@ -14,21 +14,31 @@ import {
   IonButton,
   IonRow,
   IonSpinner,
+  useIonRouter
 } from "@ionic/react";
 import React, { useState } from "react";
+import { IncidentData } from "../model/incidence.interface";
+import { useStoreContext } from "../store/Store-context";
 
-const AddIncident: React.FC = () => {
+
+interface AddIncidentProps {
+  // onSubmit: (data: IncidentData) => void;
+}
+
+
+const AddIncident: React.FC<AddIncidentProps> = (/* remove {onSubmit} */) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [selectOption, setSelectOption] = useState<string>("");
   const [textArea, setTextArea] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
   const [currentDateTime, setCurrentDateTime] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const handleSubmit = () => {};
+  const { mainState, setMainState } = useStoreContext();
+  const router = useIonRouter();
 
   const getDateTime = () => {
     const now = new Date();
@@ -51,6 +61,28 @@ const AddIncident: React.FC = () => {
     );
   };
 
+  // const handleFileChange = (e) => {  //error
+  //   const input = e.target.files;
+  //   if (input.files && input.files.length > 0) {
+  //     setSelectedFile(input.files[0]);
+  //   }
+  // };
+
+  const handleSubmit = () => {
+    const incidentData: IncidentData = {
+      id: new Date().getTime(),
+      title: inputValue,
+      incidentType: selectOption,
+      description: textArea,
+      image: selectedFile,
+      location,
+      date: currentDateTime,
+    };
+    // onSubmit(incidentData);
+    setMainState(previousSavedData => [...previousSavedData, incidentData]);
+    router.push('/home');
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -64,7 +96,7 @@ const AddIncident: React.FC = () => {
           <IonInput
             label="Incident"
             labelPlacement="floating"
-            placeholder="Enter text"
+            placeholder="Enter Incident"
             value={inputValue}
             onIonChange={(e) => setInputValue(e.detail.value!)}
           ></IonInput>
@@ -105,6 +137,7 @@ const AddIncident: React.FC = () => {
               accept="image/*,video/*"
               multiple
               className="ion-text-left"
+              // onChange={handleFileChange} //why is there an error
             />
           </IonRow>
         </IonItem>
