@@ -8,5 +8,5 @@ export interface IncidentData {
       latitude: number;
       longitude: number;
     } | null;
-    date: Date | string | null;
+    date: string | null;
   }
